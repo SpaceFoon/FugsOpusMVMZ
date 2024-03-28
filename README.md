@@ -1,6 +1,7 @@
 # FugsOpusMV
 
 Use OGG OPUS files in RPG Maker MV with looping! 
+
 RPG Maker MV doesn't know how to read loop data from the newer OPUS
 standard of OGG audio files. This plugin overwrites WebAudio._readOgg to
 find the loop tags and sample rate.
