@@ -1,12 +1,12 @@
 //=================================================================
-//Fugahagens Opus MV Loop Tag Compatibility.
-//FugsOpusMV.js version .01
-//For use with RPG Maker MV 1.63
+//Fugahagens Opus MV/MZ Loop Tag Compatibility.
+//FugsOpusMV.js version .10
+//For use with RPG Maker MV 1.63 and MZ
 //=================================================================
 //"use strict"
 /*:
  * @target MV 1.63
- * @plugindesc v.01 Opus MV Loop Tag Compatibility
+ * @plugindesc v.10 Opus MV Loop Tag Compatibility
  * @author Fugahagen
  *
  * ========================================================================
@@ -33,92 +33,101 @@
  * die in her sleep tonight! All protections nulled!
  */
 (function () {
-  WebAudio.prototype._readOgg = function (array) {
-    var index = 0;
-    while (index < array.length) {
-      if (this._readFourCharacters(array, index) === "OggS") {
-        index += 26;
-        // console.log(index, "index");
-        var vorbisHeaderFound = false;
-        var numSegments = array[index++];
-        // console.log("numSegments-------", numSegments);
-        var segments = [];
-        for (var i = 0; i < numSegments; i++) {
-          segments.push(array[index++]);
-        }
-        // console.log("segments", segments);
-        for (i = 0; i < numSegments; i++) {
-          if (this._readFourCharacters(array, index + 1) === "vorb") {
-            var headerType = array[index];
-            // console.log("---headerType vorbis", headerType);
-            if (headerType === 1) {
-              this._sampleRate = this._readLittleEndian(array, index + 12);
-              // console.log("_sampleRate vorbis", this._sampleRate);
-            }
-            if (headerType === 3) {
-              this._readMetaData(array, index, segments[i]);
-              // console.log("headerType 3 vorbis", headerType);
-            }
-            vorbisHeaderFound = true;
-            // console.log("vorbisHeaderFound segments", segments, headerType);
-          } else if (this._readFourCharacters(array, index) === "Opus") {
-            var headerType = array[index];
-            // console.log("---headerType opus", headerType, "index", index);
-            if (headerType === 79) {
-              if (this._sampleRate === 0) {
+  if (WebAudio.prototype._readOgg) {
+    // If MV
+    WebAudio.prototype._readOgg = function (array) {
+      var index = 0;
+      while (index < array.length) {
+        if (this._readFourCharacters(array, index) === "OggS") {
+          index += 26;
+          var vorbisHeaderFound = false;
+          var numSegments = array[index++];
+          var segments = [];
+          for (var i = 0; i < numSegments; i++) {
+            segments.push(array[index++]);
+          }
+          for (i = 0; i < numSegments; i++) {
+            if (this._readFourCharacters(array, index + 1) === "vorb") {
+              var headerType = array[index];
+              if (headerType === 1) {
                 this._sampleRate = this._readLittleEndian(array, index + 12);
               }
-              // console.log("index in if", index);
-              // console.log("_sampleRate opus", this._sampleRate);
-              // console.log("segments[i]", segments[i]);
-              this._readMetaData(array, index, segments[i]);
-              // console.log("headerType = 79", headerType, "index:", index);
+              if (headerType === 3) {
+                this._readMetaData(array, index, segments[i]);
+              }
+              vorbisHeaderFound = true;
+            } else if (this._readFourCharacters(array, index) === "Opus") {
+              var headerType = array[index];
+              if (headerType === 79) {
+                if (this._sampleRate === 0) {
+                  this._sampleRate = this._readLittleEndian(array, index + 12);
+                }
+                this._readMetaData(array, index, segments[i]);
+              }
+              vorbisHeaderFound = true;
+            }
+            index += segments[i];
+          }
+          if (!vorbisHeaderFound) {
+            break;
+          }
+        } else {
+          break;
+        }
+      }
+    };
+  } else if (WebAudio.prototype._readLoopComments) {
+    WebAudio.prototype._readLoopComments = function (arrayBuffer) {
+      const view = new DataView(arrayBuffer);
+      let index = 0;
+      while (index < view.byteLength - 30) {
+        if (this._readFourCharacters(view, index) !== "OggS") {
+          break;
+        }
+        index += 26;
+        const numSegments = view.getUint8(index++);
+        const segments = [];
+        for (let i = 0; i < numSegments; i++) {
+          segments.push(view.getUint8(index++));
+        }
+        const packets = [];
+        while (segments.length > 0) {
+          let packetSize = 0;
+          while (segments[0] === 255) {
+            packetSize += segments.shift();
+          }
+          if (segments.length > 0) {
+            packetSize += segments.shift();
+          }
+          packets.push(packetSize);
+        }
+        let vorbisHeaderFound = false;
+        for (const size of packets) {
+          if (this._readFourCharacters(view, index) === "Opus") {
+            const headerType = view.getUint8(index);
+            if (headerType === 79) {
+              if (this._sampleRate === 0) {
+                this._sampleRate = view.getUint32(index + 12, true);
+              }
+            }
+            this._readMetaData(view, index, size);
+
+            vorbisHeaderFound = true;
+          } else if (this._readFourCharacters(view, index + 1) === "vorb") {
+            const headerType = view.getUint8(index);
+            if (headerType === 1) {
+              this._sampleRate = view.getUint32(index + 12, true);
+            } else if (headerType === 3) {
+              this._readMetaData(view, index, size);
             }
             vorbisHeaderFound = true;
           }
-          index += segments[i];
+          index += size;
         }
         if (!vorbisHeaderFound) {
           break;
         }
-      } else {
-        break;
       }
-    }
-  };
-
-  // WebAudio.prototype._readMetaData = function (array, index, size) {
-  //   for (var i = index; i < index + size - 10; i++) {
-  //     if (this._readFourCharacters(array, i) === "LOOP") {
-  //       console.log("FOUND LOOP in index", i);
-  //       var text = "";
-  //       while (array[i] > 0) {
-  //         text += String.fromCharCode(array[i++]);
-  //       }
-  //       if (text.match(/LOOPSTART=([0-9]+)/)) {
-  //         this._loopStart = parseInt(RegExp.$1);
-  //         console.log("text=", text);
-  //       }
-  //       if (text.match(/LOOPLENGTH=([0-9]+)/)) {
-  //         this._loopLength = parseInt(RegExp.$1);
-  //         console.log("text=", text);
-  //       }
-  //       if (text == "LOOPSTART" || text == "LOOPLENGTH") {
-  //         var text2 = "";
-  //         i += 16;
-  //         while (array[i] > 0) {
-  //           text2 += String.fromCharCode(array[i++]);
-  //           console.log("text2=", text2);
-  //         }
-  //         if (text == "LOOPSTART") {
-  //           this._loopStart = parseInt(text2);
-  //           console.log("text2=", text2);
-  //         } else {
-  //           this._loopLength = parseInt(text2);
-  //           console.log("text2=", text2);
-  //         }
-  //       }
-  //     }
-  //   }
-  // };
+    };
+  }
 })();
