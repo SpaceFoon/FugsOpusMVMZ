@@ -32,5 +32,3 @@ Credit "Fugahagen" in your game if you feel like it.
 Copyright 2024 Fugahagen
 This plugin is released under MIT license.
 http://opensource.org/licenses/mit-license.php
-If you violate the license agreement your mother will
-die in her sleep tonight! All protections nulled!
