@@ -1,12 +1,12 @@
 //=================================================================
 //Fugahagens Opus MV/MZ Loop Tag Compatibility.
-//FugsOpusMV.js version .10
+//FugsOpusMV.js version 1.0
 //For use with RPG Maker MV 1.63 and MZ
 //=================================================================
 //"use strict"
 /*:
  * @target MV 1.63
- * @plugindesc v.10 Opus MV Loop Tag Compatibility
+ * @plugindesc v1.0 Opus MV Loop Tag Compatibility
  * @author Fugahagen
  *
  * ========================================================================
@@ -17,8 +17,8 @@
  * MV and WebAudio.prototype._readLoopComments for MZ to find the loop tags
  * and sample rate.
  *
- * *Note: Opus files still won't preview in the editor but at least
- * they will loop in game now!
+ * *Note: Opus files still won't preview in the editor but
+ * at least they will play and loop in game now!
  * =======================================================
  * Credits
  * =======================================================
@@ -30,8 +30,6 @@
  * Copyright 2024 Fugahagen
  * This plugin is released under MIT license.
  * http://opensource.org/licenses/mit-license.php
- * If you violate the license agreement your mother will
- * die in her sleep tonight! All protections nulled!
  */
 (function () {
   if (WebAudio.prototype._readOgg) {
