@@ -1,12 +1,12 @@
 //=================================================================
 //Fugahagens Opus MV/MZ Loop Tag Compatibility.
-//FugsOpusMV.js version 1.0
+// FugsOpusMV-MZ.js version 1.0.0
 //For use with RPG Maker MV 1.63 and MZ
 //=================================================================
 //"use strict"
 /*:
- * @target MV 1.63
- * @plugindesc v1.0 Opus MV Loop Tag Compatibility
+ * @target MV MZ
+ * @plugindesc v1.0.0 OGG Opus loop-tag compatibility for RPG Maker MV and MZ
  * @author Fugahagen
  *
  * ========================================================================
