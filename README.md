@@ -1,34 +1,32 @@
-# FugsOpusMV/MZ
+# Fugs OGG Opus Loop Tags (MV/MZ)
 
-Use OGG OPUS files in RPG Maker MV/MZ with looping!
+Read OGG Opus loop metadata in RPG Maker MV and MZ so loop-tagged audio can loop during gameplay.
 
-RPG Maker MV and MZ both have the ability to play the newer Opus codec for OGG audio files which have better sound at a smaller size.
-The problem is the engine ​doesn't know how to read loop tog data which is important with some BGM/BGSs.
-
-This plugin overwrites WebAudio._readOgg to find the loop tags and sample rate.
-
-*MV Note: Opus files won't preview in the editor but they will loop in game now!
-*MZ Note: OPUS files will play in the editor but won't loop unless in game.
+| | |
+|---|---|
+| **Version** | 1.0.0 |
+| **Engines** | RPG Maker MV 1.6.3+ and MZ |
+| **Plugin file** | `FugsOpusMV-MZ.js` |
+| **License** | MIT ([LICENSE](LICENSE)) |
 
 ## Download
 
-[From Itch.io](https://spacefoon.itch.io/fugs-ogg-opus-loop-tag-support-for-rmmv)
-[From Github](https://github.com/SpaceFoon/FugsOpusMVMZ/releases)
+- [GitHub Releases](https://github.com/SpaceFoon/FugsOpusMVMZ/releases) — versioned install ZIPs will appear here.
+- [Plugin source](https://github.com/SpaceFoon/FugsOpusMVMZ/blob/main/FugsOpusMV-MZ.js)
+- [Repository](https://github.com/SpaceFoon/FugsOpusMVMZ)
+- [Itch.io page](https://spacefoon.itch.io/fugs-ogg-opus-loop-tag-support-for-rmmv)
 
 ## Install
 
-Just move to your plugins folder and activate the plugin in your plugin manager.
+1. Copy `FugsOpusMV-MZ.js` into your game's `js/plugins/` folder.
+2. Enable **FugsOpusMV-MZ** in Plugin Manager.
+3. Use OGG files encoded with Opus that contain loop metadata. This plugin has no parameters.
 
-No options!
+## Editor preview notes
 
-## Addition Resources
+- In MV, Opus files do not preview in the editor; they can loop during gameplay.
+- In MZ, Opus files may play in the editor without honoring loop metadata; check looping in gameplay.
 
-## Credit
+## License and credit
 
-Credit "Fugahagen" in your game if you feel like it.
-
-## License: The MIT License
-
-Copyright 2024 Fugahagen
-This plugin is released under MIT license.
-http://opensource.org/licenses/mit-license.php
+MIT. See [LICENSE](LICENSE). Credit Fugahagen if you wish.
