@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux]
     outputs:
       version: ${{ steps.v.outputs.version }}
       tag_name: ${{ steps.v.outputs.tag_name }}
