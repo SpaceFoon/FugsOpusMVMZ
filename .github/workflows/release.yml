@@ -41,7 +41,8 @@ jobs:
 
   release:
     needs: prepare
-    uses: SpaceFoon/RPG-Maker-MV-MZ-plugins/.github/workflows/release-plugin.yml@main
+    # Pinned to a reviewed commit of the shared release workflow; bump via a reviewed PR.
+    uses: SpaceFoon/RPG-Maker-MV-MZ-plugins/.github/workflows/release-plugin.yml@e1a090f13860338c4723f7c12f673b691652325f
     with:
       plugin_slug: fugs-opus-loop-tags
       plugin_name: Fugs OGG Opus Loop Tags
